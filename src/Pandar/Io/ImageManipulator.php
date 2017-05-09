@@ -260,6 +260,31 @@ class ImageManipulator {
   }
 
   /**
+   * Flips the current image
+   *
+   * @param mixed $mode Direction to flip the image
+   * @return ImageManipulator for a fluent interface
+   * @throws InvalidArgumentException
+   */
+  public function flip($mode = null) {
+
+    if(null !== $mode) {
+
+      if($mode === IMG_FLIP_VERTICAL)
+        imageflip($this->image, IMG_FLIP_VERTICAL);
+
+      else if($mode === IMG_FLIP_VERTICAL)
+        imageflip($this->image, IMG_FLIP_VERTICAL);
+
+      else if($mode === IMG_FLIP_BOTH)
+        imageflip($this->image, IMG_FLIP_BOTH);
+
+    }
+
+    return $this;
+  }
+
+  /**
    * Replace current image resource with a new one
    *
    * @param resource $res New image resource
