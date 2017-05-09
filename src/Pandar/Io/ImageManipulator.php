@@ -269,6 +269,10 @@ class ImageManipulator {
    */
   public function rotate($degrees, $bgColour = 0) {
 
+    if (!is_resource($this->image)) {
+      throw new RuntimeException('No image set');
+    }
+
     if($degrees > 360 || $degrees < -360)
       throw new InvalidArgumentException('Degrees is invalid');
 
@@ -285,6 +289,10 @@ class ImageManipulator {
    * @throws InvalidArgumentException
    */
   public function flip($mode = null) {
+
+    if (!is_resource($this->image)) {
+      throw new RuntimeException('No image set');
+    }
 
     if(null !== $mode) {
 
@@ -471,6 +479,11 @@ class ImageManipulator {
       return $this->height;
   }
 
+  /**
+   * Get exif data of a jpeg
+   *
+   * @return mixed
+   */
   public function getExif() {
     return $this->exif ? $this->exif : null;
   }
