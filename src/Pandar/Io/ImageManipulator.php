@@ -36,6 +36,18 @@ class ImageManipulator {
   protected $image;
 
   /**
+   * @var array
+   */
+  protected $exif;
+
+  /**
+   * @var string
+   */
+  protected $originalFile;
+
+  protected $type;
+
+  /**
    * Image manipulator constructor
    *
    * @param string $file OPTIONAL Path to image file or image data as string
@@ -50,14 +62,16 @@ class ImageManipulator {
     // Ignore JPEG warnings that cause imagecreatefromjpeg() to fail
 		ini_set('gd.jpeg_ignore_warning', 1);
 
-    if (null !== $file) {
+    $this->originalFile = $file
 
-      if (is_file($file)) {
-        $this->setImageFile($file);
+    if (null !== $this->originalFile) {
+
+      if (is_file($this->originalFile)) {
+        $this->setImageFile($this->originalFile);
       }
 
       else {
-        $this->setImageString($file);
+        $this->setImageString($this->originalFile);
       }
 
     }
@@ -82,14 +96,18 @@ class ImageManipulator {
       imagedestroy($this->image);
     }
 
-    list ($this->width, $this->height, $type) = getimagesize($file);
+    list ($this->width, $this->height, $this->type) = getimagesize($file);
 
-    switch ($type) {
+    switch ($this->type) {
       case IMAGETYPE_GIF :
         $this->image = imagecreatefromgif($file);
         break;
       case IMAGETYPE_JPEG :
         $this->image = imagecreatefromjpeg($file);
+
+        if(function_exists('exif_read_data'))
+          $this->exif = exif_read_data($file);
+
         break;
       case IMAGETYPE_PNG :
         $this->image = imagecreatefrompng($file);
@@ -451,6 +469,10 @@ class ImageManipulator {
    */
   public function getHeight() {
       return $this->height;
+  }
+
+  public function getExif() {
+    return $this->exif ? $this->exif : null;
   }
 
 	public function __destruct() {
