@@ -348,6 +348,42 @@ class ImageManipulator {
   }
 
   /**
+  * Adjust Orientation based on the exif data of the current image
+  *
+  * @return ImageManipulator for a fluent interface
+  * @throws RuntimeException
+  */
+  public function orientation() {
+
+    if (!is_resource($this->image)) {
+      throw new RuntimeException('No image set');
+    }
+
+    if(null != $this->getExif()) {
+      $exif = $this->getExif();
+      if (array_key_exists('Orientation', $exif) && !empty($exif['Orientation'])) {
+        switch ($exif['Orientation']) {
+          case 3:
+            $this->rotate(180);
+            break;
+
+          case 6:
+            $this->rotate(-90);
+            break;
+
+          case 8:
+            $this->rotate(90);
+            break;
+        }
+
+      }
+
+    }
+
+    return $this;
+  }
+
+  /**
    * Replace current image resource with a new one
    *
    * @param resource $res New image resource
