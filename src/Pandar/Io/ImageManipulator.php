@@ -265,6 +265,7 @@ class ImageManipulator {
    * @param float $degrees Degrees to rotate the image
    * @param int $bgColour Backgrount colour
    * @return ImageManipulator for a fluent interface
+   * @throws RuntimeException
    * @throws InvalidArgumentException
    */
   public function rotate($degrees, $bgColour = 0) {
@@ -286,7 +287,7 @@ class ImageManipulator {
    *
    * @param mixed $mode Direction to flip the image
    * @return ImageManipulator for a fluent interface
-   * @throws InvalidArgumentException
+   * @throws RuntimeException
    */
   public function flip($mode = null) {
 
@@ -315,6 +316,7 @@ class ImageManipulator {
    *
    * @param int $level Direction to flip the image
    * @return ImageManipulator for a fluent interface
+   * @throws RuntimeException
    */
   public function brightness($level = null) {
 
@@ -324,6 +326,23 @@ class ImageManipulator {
 
     if($level !== null)
       imagefilter($this->image, IMG_FILTER_BRIGHTNESS, $level);
+
+    return $this;
+  }
+
+  /**
+   * Apply a grey scale effect to the current image
+   *
+   * @return ImageManipulator for a fluent interface
+   * @throws RuntimeException
+   */
+  public function greyscale() {
+
+    if (!is_resource($this->image)) {
+      throw new RuntimeException('No image set');
+    }
+
+    imagefilter($this->image, IMG_FILTER_GRAYSCALE);
 
     return $this;
   }
