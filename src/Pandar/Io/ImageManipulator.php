@@ -242,6 +242,24 @@ class ImageManipulator {
   }
 
   /**
+   * Rotates current image
+   *
+   * @param float $degrees Degrees to rotate the image
+   * @param int $bgColour Backgrount colour
+   * @return ImageManipulator for a fluent interface
+   * @throws InvalidArgumentException
+   */
+  public function rotate($degrees, $bgColour = 0) {
+
+    if($degrees > 360 || $degrees < -360)
+      throw new InvalidArgumentException('Degrees is invalid');
+
+    $this->image = imagerotate($this->image, $degrees, $bgColour);
+
+    return $this;
+  }
+
+  /**
    * Replace current image resource with a new one
    *
    * @param resource $res New image resource
