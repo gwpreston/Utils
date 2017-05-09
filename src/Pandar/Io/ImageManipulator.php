@@ -311,6 +311,24 @@ class ImageManipulator {
   }
 
   /**
+   * Changes brightness level of the current image
+   *
+   * @param int $level Direction to flip the image
+   * @return ImageManipulator for a fluent interface
+   */
+  public function brightness($level = null) {
+
+    if (!is_resource($this->image)) {
+      throw new RuntimeException('No image set');
+    }
+
+    if($level !== null)
+      imagefilter($this->image, IMG_FILTER_BRIGHTNESS, $level);
+
+    return $this;
+  }
+
+  /**
    * Replace current image resource with a new one
    *
    * @param resource $res New image resource
